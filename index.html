@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Ouvrir l'App</title>
+</head>
+<body>
+    <h1>Bienvenue sur notre application</h1>
+    <p>Cliquez sur le bouton ci-dessous pour ouvrir l'application mobile.</p>
+    <a href="https://play.google.com/store/apps/details?id=iut.dam.sae_init_app" target="_blank">
+        <button>Ouvrir l'App</button>
+    </a>
+
+    <!-- Ou pour Android App -->
+    <script>
+        if (navigator.userAgent.match(/Android/i)) {
+            window.location = "android-app://iut.dam.sae_init_app";
+        }
+    </script>
+</body>
+</html>
