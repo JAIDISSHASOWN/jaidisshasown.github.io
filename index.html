@@ -2,10 +2,9 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>💨 Générateur de Prout 3000 - Édition SOLID 💨</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>💨 Générateur de Prout 3000 - Mobile Edition 💨</title>
     <style>
-        /* --- CSS INCHANGÉ MAIS ORGANISÉ --- */
         :root {
             --primary-bg: #a8ff78;
             --secondary-bg: #78ffd6;
@@ -20,61 +19,71 @@
             background: radial-gradient(circle, var(--primary-bg) 0%, var(--secondary-bg) 100%);
             font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif;
             overflow: hidden; text-align: center; transition: background 0.3s;
+            
+            /* ANTI-SÉLECTION ET ANTI-ZOOM MOBILE */
+            -webkit-user-select: none;
+            user-select: none;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
         }
 
-        /* États globaux */
         body.catastrophe { animation: alerteRouge 0.3s infinite !important; }
         .violent-shake { animation: violentShake 0.1s infinite; }
         .shake { animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both; }
 
-        /* Typographie */
-        h1 { color: var(--text-main); font-size: 3rem; text-shadow: 2px 2px #fff; margin-bottom: 10px; z-index: 10; }
-        #subtitle { color: #333; font-size: 1.5rem; margin-bottom: 30px; font-weight: bold; z-index: 10; }
+        h1 { color: var(--text-main); font-size: clamp(2rem, 8vw, 3rem); text-shadow: 2px 2px #fff; margin-bottom: 10px; z-index: 10; padding: 0 10px; }
+        #subtitle { color: #333; font-size: clamp(1rem, 5vw, 1.5rem); margin-bottom: 30px; font-weight: bold; z-index: 10; padding: 0 10px; }
         .score-container { color: var(--text-main); margin-top: 40px; z-index: 10; background: rgba(255,255,255,0.5); padding: 10px; border-radius: 10px; }
 
-        /* Bouton principal */
+        /* Bouton principal optimisé pour tous les écrans */
         #prout-btn {
             background-color: var(--btn-color); color: white; border: 5px solid var(--btn-border);
-            border-radius: 50%; width: 250px; height: 250px; font-size: 2rem; font-weight: bold;
+            border-radius: 50%; 
+            width: 60vw; height: 60vw; /* Taille relative à l'écran */
+            max-width: 250px; max-height: 250px; /* Limite sur PC */
+            font-size: clamp(1.2rem, 6vw, 2rem); font-weight: bold;
             cursor: pointer; box-shadow: 0 15px var(--btn-border), 0 20px 20px rgba(0,0,0,0.5);
-            transition: transform 0.1s, box-shadow 0.1s; z-index: 10; user-select: none;
+            transition: transform 0.1s, box-shadow 0.1s; z-index: 10;
+            
+            /* Retrait de l'effet bleu sur Android */
+            -webkit-tap-highlight-color: transparent;
+            outline: none;
         }
-        #prout-btn:active { transform: translateY(15px) scale(0.95); box-shadow: 0 0px var(--btn-border), 0 5px 10px rgba(0,0,0,0.5); background-color: #a0522d; }
+        #prout-btn:active { transform: translateY(10px) scale(0.95); box-shadow: 0 5px var(--btn-border), 0 5px 10px rgba(0,0,0,0.5); background-color: #a0522d; }
 
-        /* Particules */
         .gas { position: absolute; font-size: 4rem; pointer-events: none; animation: floatUp 2s ease-out forwards; z-index: 5; }
         .poop-rain { position: absolute; font-size: 5rem; pointer-events: none; animation: fallDown 1.5s linear forwards; z-index: 9999; }
 
-        /* Alertes */
         .siren-text {
-            position: fixed; font-size: 6vw; color: #ffff00; text-shadow: 5px 5px #000, -5px -5px #ff0000;
-            font-weight: 900; z-index: 10000; pointer-events: none; display: none; top: 15%; left: 50%;
+            position: fixed; font-size: 8vw; color: #ffff00; text-shadow: 3px 3px #000, -3px -3px #ff0000;
+            font-weight: 900; z-index: 10000; pointer-events: none; display: none; top: 10%; left: 50%;
             transform: translateX(-50%); white-space: nowrap;
         }
         .siren-active { display: block; animation: panicText 0.2s infinite; }
 
-        /* Mini-jeu */
         #minigame-container {
             display: none; flex-direction: column; align-items: center; justify-content: center;
-            background: rgba(0, 0, 0, 0.85); border: 8px dashed #ffeb3b; border-radius: 20px;
-            padding: 40px; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            z-index: 15000; width: 80%; max-width: 500px;
+            background: rgba(0, 0, 0, 0.9); border: 4px dashed #ffeb3b; border-radius: 20px;
+            padding: 20px; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            z-index: 15000; width: 85%; max-width: 400px;
         }
-        #minigame-container h2 { color: #ffeb3b; margin-top: 0; font-size: 2rem; text-transform: uppercase; }
+        #minigame-container h2 { color: #ffeb3b; margin-top: 0; font-size: 1.5rem; text-transform: uppercase; }
+        #minigame-container p { color: white; font-size: 1rem; margin: 10px 0; }
+        
         #minigame-btn {
             background-color: #ff5722; color: white; border: 4px solid #fff; border-radius: 15px;
-            padding: 20px 40px; font-size: 1.8rem; font-weight: bold; cursor: pointer; margin: 20px 0;
-            box-shadow: 0 10px #bf360c; transition: transform 0.05s, box-shadow 0.05s; user-select: none;
+            padding: 15px 20px; font-size: 1.5rem; font-weight: bold; cursor: pointer; margin: 20px 0;
+            box-shadow: 0 10px #bf360c; transition: transform 0.05s, box-shadow 0.05s;
+            width: 100%; -webkit-tap-highlight-color: transparent;
         }
         #minigame-btn:active { transform: translateY(10px); box-shadow: 0 0px #bf360c; }
-        #progress-bar-container { width: 100%; height: 40px; background-color: #333; border-radius: 20px; overflow: hidden; border: 3px solid #fff; }
+        #progress-bar-container { width: 100%; height: 30px; background-color: #333; border-radius: 15px; overflow: hidden; border: 3px solid #fff; }
         #progress-bar { width: 0%; height: 100%; background-color: #4caf50; transition: width 0.1s; }
 
-        /* Keyframes */
         @keyframes alerteRouge { 0%, 100% { background: radial-gradient(circle, #ff0000 0%, #8b0000 100%); } 50% { background: radial-gradient(circle, #ff5555 0%, #3a0000 100%); } }
-        @keyframes shake { 10%, 90% { transform: translate3d(-5px, 0, 0); } 20%, 80% { transform: translate3d(5px, 0, 0); } 30%, 50%, 70% { transform: translate3d(-10px, 10px, 0) rotate(-2deg); } 40%, 60% { transform: translate3d(10px, -10px, 0) rotate(2deg); } }
-        @keyframes violentShake { 0% { transform: translate(5px, 5px) rotate(0deg); } 25% { transform: translate(-5px, -5px) rotate(2deg); } 50% { transform: translate(-5px, 5px) rotate(-2deg); } 75% { transform: translate(5px, -5px) rotate(2deg); } 100% { transform: translate(5px, 5px) rotate(0deg); } }
-        @keyframes floatUp { 0% { transform: translateY(0) scale(0.5) rotate(0deg); opacity: 1; } 100% { transform: translateY(-500px) scale(2) rotate(180deg); opacity: 0; } }
+        @keyframes shake { 10%, 90% { transform: translate3d(-3px, 0, 0); } 20%, 80% { transform: translate3d(3px, 0, 0); } 30%, 50%, 70% { transform: translate3d(-6px, 6px, 0) rotate(-2deg); } 40%, 60% { transform: translate3d(6px, -6px, 0) rotate(2deg); } }
+        @keyframes violentShake { 0% { transform: translate(3px, 3px) rotate(0deg); } 25% { transform: translate(-3px, -3px) rotate(2deg); } 50% { transform: translate(-3px, 3px) rotate(-2deg); } 75% { transform: translate(3px, -3px) rotate(2deg); } 100% { transform: translate(3px, 3px) rotate(0deg); } }
+        @keyframes floatUp { 0% { transform: translateY(0) scale(0.5) rotate(0deg); opacity: 1; } 100% { transform: translateY(-300px) scale(2) rotate(180deg); opacity: 0; } }
         @keyframes fallDown { 0% { transform: translateY(-10vh) scale(1) rotate(0deg); opacity: 1; } 100% { transform: translateY(110vh) scale(2) rotate(360deg); opacity: 0; } }
         @keyframes panicText { 0% { transform: translateX(-52%) scale(1); } 50% { transform: translateX(-48%) scale(1.1); } 100% { transform: translateX(-50%) scale(1); } }
     </style>
@@ -83,59 +92,51 @@
 
     <div class="siren-text" id="siren-alert">🚨 ALERTE FUITE 🚨</div>
 
-    <h1>💨 Le Générateur de Prout 3000 💨</h1>
+    <h1>💨 Prout 3000 💨</h1>
     <div id="subtitle">Appuie si t'es un vrai.</div>
 
     <button id="prout-btn">LÂCHE LA CAISSE</button>
 
-    <h2 class="score-container">Score de prouts : <span id="score">0</span></h2>
+    <h2 class="score-container">Score : <span id="score">0</span></h2>
 
     <div id="minigame-container">
         <h2>RÉPARE LA FUITE !</h2>
-        <p style="color: white; font-size: 1.2rem;">Clique frénétiquement pour refermer les vannes !</p>
-        <button id="minigame-btn">🪠 SERRER LES FESSES 🪠</button>
+        <p>Clique vite pour fermer les vannes !</p>
+        <button id="minigame-btn">🪠 SERRER 🪠</button>
         <div id="progress-bar-container">
             <div id="progress-bar"></div>
         </div>
     </div>
 
     <script>
-        /**
-         * Service responsable uniquement de la gestion audio (Single Responsibility)
-         */
         class AudioService {
             constructor(sounds) {
                 this.sounds = sounds;
                 this.effortSound = 'https://www.soundjay.com/human/fart-08.mp3';
             }
-
             playRandomFart() {
                 const url = this.sounds[Math.floor(Math.random() * this.sounds.length)];
                 this._playSound(url, 1.0);
             }
-
             playEffortSound() {
                 this._playSound(this.effortSound, 2.0);
             }
-
             _playSound(url, playbackRate) {
                 const audio = new Audio(url);
                 audio.playbackRate = playbackRate;
-                audio.play().catch(() => console.warn("Interaction utilisateur requise pour l'audio."));
+                // Sur mobile, l'audio peut être bloqué si hors contexte utilisateur
+                audio.play().catch(() => {}); 
             }
         }
 
-        /**
-         * Gestionnaire des animations de particules (caca, gaz)
-         */
         class ParticleSystem {
             spawnGas(x, y) {
-                const numGas = Math.floor(Math.random() * 4) + 2; 
+                const numGas = Math.floor(Math.random() * 3) + 2; 
                 for (let i = 0; i < numGas; i++) {
                     const gas = document.createElement('div');
                     gas.className = 'gas';
                     gas.innerText = '💨'; 
-                    const offsetX = (Math.random() - 0.5) * 200;
+                    const offsetX = (Math.random() - 0.5) * 150;
                     
                     if (x && y) {
                         gas.style.left = `${x + offsetX - 30}px`;
@@ -162,9 +163,6 @@
             }
         }
 
-        /**
-         * Gestionnaire de l'interface utilisateur (DOM manipulation)
-         */
         class UIManager {
             constructor() {
                 this.btn = document.getElementById('prout-btn');
@@ -176,17 +174,12 @@
                 this.progressBar = document.getElementById('progress-bar');
             }
 
-            updateScore(score) {
-                this.scoreElement.innerText = score;
-            }
-
-            updateSubtitle(text) {
-                this.subtitle.innerText = text;
-            }
+            updateScore(score) { this.scoreElement.innerText = score; }
+            updateSubtitle(text) { this.subtitle.innerText = text; }
 
             triggerShake() {
                 document.body.classList.remove('shake');
-                void document.body.offsetWidth; // Force reflow
+                void document.body.offsetWidth;
                 document.body.classList.add('shake');
             }
 
@@ -195,9 +188,7 @@
                 document.body.style.background = `radial-gradient(circle, hsl(${hue}, 100%, 70%) 0%, hsl(${hue - 30}, 100%, 40%) 100%)`;
             }
 
-            resetBackgroundColor() {
-                document.body.style.background = 'radial-gradient(circle, #a8ff78 0%, #78ffd6 100%)';
-            }
+            resetBackgroundColor() { document.body.style.background = 'radial-gradient(circle, #a8ff78 0%, #78ffd6 100%)'; }
 
             toggleCatastropheUI(isActive) {
                 if (isActive) {
@@ -205,25 +196,20 @@
                     this.minigameContainer.style.display = 'flex';
                     document.body.classList.add('catastrophe', 'violent-shake');
                     this.sirenAlert.classList.add('siren-active');
-                    this.updateSubtitle("ERREUR 404 : LE SLIP A CÉDÉ !!!");
+                    this.updateSubtitle("ERREUR : LE SLIP A CÉDÉ !!!");
                 } else {
                     this.minigameContainer.style.display = 'none';
                     this.btn.style.display = 'block';
                     document.body.classList.remove('catastrophe', 'violent-shake');
                     this.sirenAlert.classList.remove('siren-active');
-                    this.updateSubtitle("Ouf... Intervention réussie. Va te laver quand même.");
+                    this.updateSubtitle("Ouf... Va te laver quand même.");
                     this.resetBackgroundColor();
                 }
             }
 
-            updateProgressBar(percentage) {
-                this.progressBar.style.width = `${percentage}%`;
-            }
+            updateProgressBar(percentage) { this.progressBar.style.width = `${percentage}%`; }
         }
 
-        /**
-         * Moteur principal du jeu (Contrôleur) - Relie les composants (Dependency Inversion)
-         */
         class GameEngine {
             constructor(audioService, uiManager, particleSystem) {
                 this.audio = audioService;
@@ -237,16 +223,27 @@
                 this.catastropheIntervals = [];
 
                 this.messages = [
-                    "Oups, pardon !", "Ça sent le rat mort ici...", "Celle-là était bien grasse.",
-                    "Tu as mangé des fayots à midi ?", "Silence radio, mais dégâts max.", "Le slip a pris un coup."
+                    "Oups, pardon !", "Celle-là était grasse.", "Alerte pollution ☢️",
+                    "Des fayots à midi ?", "Silence radio, dégâts max.", "Le slip a pris un coup."
                 ];
 
                 this._bindEvents();
             }
 
             _bindEvents() {
-                this.ui.btn.addEventListener('click', (e) => this.handleMainClick(e));
-                this.ui.minigameBtn.addEventListener('click', () => this.handleMinigameClick());
+                // Utilisation de pointerdown pour une réactivité instantanée sur tactile
+                const interactionEvent = window.PointerEvent ? 'pointerdown' : 'touchstart';
+                
+                // Prévention du comportement par défaut pour éviter les zooms et scrolls
+                this.ui.btn.addEventListener(interactionEvent, (e) => {
+                    e.preventDefault(); 
+                    this.handleMainClick(e);
+                }, { passive: false });
+
+                this.ui.minigameBtn.addEventListener(interactionEvent, (e) => {
+                    e.preventDefault();
+                    this.handleMinigameClick();
+                }, { passive: false });
             }
 
             handleMainClick(event) {
@@ -255,11 +252,18 @@
                 this.score++;
                 this.ui.updateScore(this.score);
 
-                // 15% de chance de fuite critique
-                if (Math.random() < 0.5) {
+                // Extraction sécurisée des coordonnées tactiles ou souris
+                let clientX = event.clientX;
+                let clientY = event.clientY;
+                if (event.touches && event.touches.length > 0) {
+                    clientX = event.touches[0].clientX;
+                    clientY = event.touches[0].clientY;
+                }
+
+                if (Math.random() < 0.05) {
                     this.triggerCatastrophe();
                 } else {
-                    this.executeNormalFart(event.clientX, event.clientY);
+                    this.executeNormalFart(clientX, clientY);
                 }
             }
 
@@ -277,7 +281,6 @@
                 this.ui.updateProgressBar(0);
                 this.ui.toggleCatastropheUI(true);
 
-                // Démarrage des boucles infernales
                 this.catastropheIntervals.push(setInterval(() => this.audio.playRandomFart(), 400));
                 this.catastropheIntervals.push(setInterval(() => this.particles.spawnPoop(), 150));
             }
@@ -303,7 +306,6 @@
             }
         }
 
-        // --- INITIALISATION (Point d'entrée) ---
         const fartSoundsDB = [
             'https://www.soundjay.com/human/fart-01.mp3',
             'https://www.soundjay.com/human/fart-02.mp3',
@@ -312,12 +314,9 @@
             'https://www.soundjay.com/human/fart-08.mp3'
         ];
 
-        // Injection des dépendances
         const audioService = new AudioService(fartSoundsDB);
         const uiManager = new UIManager();
         const particleSystem = new ParticleSystem();
-        
-        // Lancement du jeu
         const game = new GameEngine(audioService, uiManager, particleSystem);
     </script>
 </body>
