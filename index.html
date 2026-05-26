@@ -3,13 +3,187 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ouvrir l'application</title>
-    <meta http-equiv="refresh" content="0;url=myapp://ouvrir-app">
+    <title>💨 Générateur de Prout 3000 💨</title>
+    <style>
+        /* Un design volontairement douteux */
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(circle, #a8ff78 0%, #78ffd6 100%);
+            font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif;
+            overflow: hidden;
+            text-align: center;
+            transition: background 0.3s;
+        }
+
+        h1 {
+            color: #5c4033;
+            font-size: 3rem;
+            text-shadow: 2px 2px #fff;
+            margin-bottom: 10px;
+            z-index: 10;
+        }
+
+        #subtitle {
+            color: #333;
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+            font-weight: bold;
+            z-index: 10;
+        }
+
+        /* Le gros bouton rouge/marron */
+        #prout-btn {
+            background-color: #8b4513;
+            color: white;
+            border: 5px solid #5c4033;
+            border-radius: 50%;
+            width: 250px;
+            height: 250px;
+            font-size: 2rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 15px #5c4033, 0 20px 20px rgba(0,0,0,0.5);
+            transition: transform 0.1s, box-shadow 0.1s;
+            z-index: 10;
+            user-select: none;
+        }
+
+        #prout-btn:active {
+            transform: translateY(15px) scale(0.95);
+            box-shadow: 0 0px #5c4033, 0 5px 10px rgba(0,0,0,0.5);
+            background-color: #a0522d;
+        }
+
+        /* Effet de tremblement de l'écran */
+        .shake {
+            animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+        }
+
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-5px, 0, 0); }
+            20%, 80% { transform: translate3d(5px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-10px, 10px, 0) rotate(-2deg); }
+            40%, 60% { transform: translate3d(10px, -10px, 0) rotate(2deg); }
+        }
+
+        /* Animations pour les emojis qui volent */
+        .gas {
+            position: absolute;
+            font-size: 4rem;
+            pointer-events: none;
+            animation: floatUp 2s ease-out forwards;
+            z-index: 5;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(0) scale(0.5) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-500px) scale(2) rotate(180deg);
+                opacity: 0;
+            }
+        }
+    </style>
 </head>
 <body>
-    <p>Si vous ne voyez pas la redirection, <a href="myapp://ouvrir-app">cliquez ici</a>.</p>
-    <p>Si vous n'avez pas installé l'app : <a href="https://play.google.com/store/apps/details?id=iut.dam.sae_init_app" target="_blank">
-        <button>Installer l'App</button>
-    </a></p>
+
+    <h1>💨 Le Générateur de Prout 3000 💨</h1>
+    <div id="subtitle">Appuie si t'es un vrai.</div>
+
+    <button id="prout-btn">LÂCHE LA CAISSE</button>
+
+    <h2 style="color: #5c4033; margin-top: 40px; z-index: 10;">
+        Score de prouts : <span id="score">0</span>
+    </h2>
+
+    <script>
+        const btn = document.getElementById('prout-btn');
+        const scoreElement = document.getElementById('score');
+        const subtitle = document.getElementById('subtitle');
+        let score = 0;
+
+        // Liste de banques de sons gratuites de pets
+        const fartSounds = [
+            'https://www.soundjay.com/human/fart-01.mp3',
+            'https://www.soundjay.com/human/fart-02.mp3',
+            'https://www.soundjay.com/human/fart-03.mp3',
+            'https://www.soundjay.com/human/fart-06.mp3',
+            'https://www.soundjay.com/human/fart-08.mp3'
+        ];
+
+        const messages = [
+            "Oups, pardon !",
+            "Ça sent le rat mort ici...",
+            "Celle-là était bien grasse.",
+            "Alerte pollution de l'air ☢️",
+            "Tu as mangé des fayots à midi ?",
+            "Silence radio, mais dégâts max.",
+            "Le slip a pris un coup.",
+            "Champion du monde de l'aérodynamisme !"
+        ];
+
+        btn.addEventListener('click', (e) => {
+            // 1. Jouer le son
+            const randomSound = fartSounds[Math.floor(Math.random() * fartSounds.length)];
+            const audio = new Audio(randomSound);
+            audio.play().catch(err => console.log("Le navigateur bloque l'audio, faut cliquer d'abord !"));
+
+            // 2. Tremblement de l'écran
+            document.body.classList.remove('shake');
+            void document.body.offsetWidth; // Force le reflow pour relancer l'animation
+            document.body.classList.add('shake');
+
+            // 3. Mettre à jour le score et le texte
+            score++;
+            scoreElement.innerText = score;
+            subtitle.innerText = messages[Math.floor(Math.random() * messages.length)];
+
+            // Changement de couleur du fond pour rendre ça encore plus laid
+            const hue = Math.floor(Math.random() * 60) + 60; // Entre jaune et vert
+            document.body.style.background = `radial-gradient(circle, hsl(${hue}, 100%, 70%) 0%, hsl(${hue - 30}, 100%, 40%) 100%)`;
+
+            // 4. Faire apparaître des emojis
+            spawnGas(e.clientX, e.clientY);
+        });
+
+        function spawnGas(x, y) {
+            const numGas = Math.floor(Math.random() * 5) + 3; // 3 à 7 emojis par clic
+            
+            for (let i = 0; i < numGas; i++) {
+                const gas = document.createElement('div');
+                gas.className = 'gas';
+                
+                // Alterne entre le nuage et le caca pour plus d'élégance
+                gas.innerText = Math.random() > 0.8 ? '💩' : '💨'; 
+                
+                // Positionne les emojis autour du bouton de manière aléatoire
+                const offsetX = (Math.random() - 0.5) * 200;
+                
+                // Si on a les coordonnées de la souris, on les utilise, sinon au centre
+                if(x && y) {
+                    gas.style.left = (x + offsetX - 30) + 'px';
+                    gas.style.top = (y - 30) + 'px';
+                } else {
+                    gas.style.left = `calc(50% + ${offsetX}px)`;
+                    gas.style.top = '50%';
+                }
+                
+                document.body.appendChild(gas);
+
+                // Nettoyage des emojis après l'animation
+                setTimeout(() => {
+                    gas.remove();
+                }, 2000);
+            }
+        }
+    </script>
 </body>
 </html>
