@@ -1,248 +1,35 @@
-<script>
-    class AudioService {
-        constructor(sounds) {
-            // 1. On précharge tous les sons une seule fois au démarrage
-            this.sounds = sounds.map(url => {
-                const audio = new Audio(url);
-                audio.preload = "auto";
-                return audio;
-            });
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>💨 Générateur de Prout 3000 💨</title>
+    <style>
+        :root {
+            --primary-bg: #a8ff78;
+            --secondary-bg: #78ffd6;
+            --btn-color: #8b4513;
+            --btn-border: #5c4033;
+            --text-main: #5c4033;
+        }
+
+        body {
+            margin: 0; padding: 0; height: 100vh;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            background: radial-gradient(circle, var(--primary-bg) 0%, var(--secondary-bg) 100%);
+            font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif;
+            overflow: hidden; text-align: center; transition: background 0.3s;
             
-            this.effortSound = new Audio('https://www.soundjay.com/human/fart-08.mp3');
-            this.effortSound.preload = "auto";
-            
-            this.isUnlocked = false;
+            /* ANTI-SÉLECTION ET ANTI-ZOOM MOBILE */
+            -webkit-user-select: none;
+            user-select: none;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
         }
 
-        // 2. La méthode secrète pour débloquer l'audio sur mobile
-        unlockAudio() {
-            if (this.isUnlocked) return;
-            
-            // On joue et on met en pause instantanément tous les sons au premier tap.
-            // Cela prouve au navigateur que l'utilisateur a interagi.
-            this.sounds.forEach(audio => {
-                audio.volume = 0; // Muet pour le déblocage
-                audio.play().then(() => {
-                    audio.pause();
-                    audio.currentTime = 0;
-                    audio.volume = 1; // On remet le volume pour la vraie utilisation
-                }).catch(() => {});
-            });
+        body.catastrophe { animation: alerteRouge 0.3s infinite !important; }
+        .violent-shake { animation: violentShake 0.1s infinite; }
+        .shake { animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both; }
 
-            this.effortSound.volume = 0;
-            this.effortSound.play().then(() => {
-                this.effortSound.pause();
-                this.effortSound.currentTime = 0;
-                this.effortSound.volume = 1;
-            }).catch(() => {});
-
-            this.isUnlocked = true;
-        }
-
-        playRandomFart() {
-            const audio = this.sounds[Math.floor(Math.random() * this.sounds.length)];
-            audio.currentTime = 0; // Rembobine à 0 au cas où il jouait déjà
-            audio.playbackRate = 1.0;
-            audio.play().catch(() => {});
-        }
-
-        playEffortSound() {
-            this.effortSound.currentTime = 0;
-            this.effortSound.playbackRate = 2.0;
-            this.effortSound.play().catch(() => {});
-        }
-    }
-
-    class ParticleSystem {
-        spawnGas(x, y) {
-            const numGas = Math.floor(Math.random() * 3) + 2; 
-            for (let i = 0; i < numGas; i++) {
-                const gas = document.createElement('div');
-                gas.className = 'gas';
-                gas.innerText = '💨'; 
-                const offsetX = (Math.random() - 0.5) * 150;
-                
-                if (x && y) {
-                    gas.style.left = `${x + offsetX - 30}px`;
-                    gas.style.top = `${y - 30}px`;
-                } else {
-                    gas.style.left = `calc(50% + ${offsetX}px)`;
-                    gas.style.top = '50%';
-                }
-                
-                document.body.appendChild(gas);
-                setTimeout(() => gas.remove(), 2000);
-            }
-        }
-
-        spawnPoop() {
-            const poop = document.createElement('div');
-            poop.className = 'poop-rain';
-            poop.innerText = '💩';
-            poop.style.left = `${Math.random() * 100}vw`;
-            poop.style.transform = `scale(${Math.random() * 1.5 + 0.5})`;
-
-            document.body.appendChild(poop);
-            setTimeout(() => poop.remove(), 1500);
-        }
-    }
-
-    class UIManager {
-        constructor() {
-            this.btn = document.getElementById('prout-btn');
-            this.scoreElement = document.getElementById('score');
-            this.subtitle = document.getElementById('subtitle');
-            this.sirenAlert = document.getElementById('siren-alert');
-            this.minigameContainer = document.getElementById('minigame-container');
-            this.minigameBtn = document.getElementById('minigame-btn');
-            this.progressBar = document.getElementById('progress-bar');
-        }
-
-        updateScore(score) { this.scoreElement.innerText = score; }
-        updateSubtitle(text) { this.subtitle.innerText = text; }
-
-        triggerShake() {
-            document.body.classList.remove('shake');
-            void document.body.offsetWidth;
-            document.body.classList.add('shake');
-        }
-
-        changeRandomBackgroundColor() {
-            const hue = Math.floor(Math.random() * 60) + 60;
-            document.body.style.background = `radial-gradient(circle, hsl(${hue}, 100%, 70%) 0%, hsl(${hue - 30}, 100%, 40%) 100%)`;
-        }
-
-        resetBackgroundColor() { document.body.style.background = 'radial-gradient(circle, #a8ff78 0%, #78ffd6 100%)'; }
-
-        toggleCatastropheUI(isActive) {
-            if (isActive) {
-                this.btn.style.display = 'none';
-                this.minigameContainer.style.display = 'flex';
-                document.body.classList.add('catastrophe', 'violent-shake');
-                this.sirenAlert.classList.add('siren-active');
-                this.updateSubtitle("ERREUR : LE SLIP A CÉDÉ !!!");
-            } else {
-                this.minigameContainer.style.display = 'none';
-                this.btn.style.display = 'block';
-                document.body.classList.remove('catastrophe', 'violent-shake');
-                this.sirenAlert.classList.remove('siren-active');
-                this.updateSubtitle("Ouf... Va te laver quand même.");
-                this.resetBackgroundColor();
-            }
-        }
-
-        updateProgressBar(percentage) { this.progressBar.style.width = `${percentage}%`; }
-    }
-
-    class GameEngine {
-        constructor(audioService, uiManager, particleSystem) {
-            this.audio = audioService;
-            this.ui = uiManager;
-            this.particles = particleSystem;
-            
-            this.score = 0;
-            this.isCatastropheMode = false;
-            this.clenchClicks = 0;
-            this.requiredClicks = 15;
-            this.catastropheIntervals = [];
-
-            this.messages = [
-                "Oups, pardon !", "Celle-là était grasse.", "Alerte pollution ☢️",
-                "Des fayots à midi ?", "Silence radio, dégâts max.", "Le slip a pris un coup."
-            ];
-
-            this._bindEvents();
-        }
-
-        _bindEvents() {
-            const interactionEvent = window.PointerEvent ? 'pointerdown' : 'touchstart';
-            
-            // Le premier clic n'importe où sur l'écran débloque l'audio
-            document.body.addEventListener(interactionEvent, () => {
-                this.audio.unlockAudio();
-            }, { once: true });
-
-            this.ui.btn.addEventListener(interactionEvent, (e) => {
-                e.preventDefault(); 
-                this.audio.unlockAudio(); // Sécurité supplémentaire
-                this.handleMainClick(e);
-            }, { passive: false });
-
-            this.ui.minigameBtn.addEventListener(interactionEvent, (e) => {
-                e.preventDefault();
-                this.handleMinigameClick();
-            }, { passive: false });
-        }
-
-        handleMainClick(event) {
-            if (this.isCatastropheMode) return;
-
-            this.score++;
-            this.ui.updateScore(this.score);
-
-            let clientX = event.clientX;
-            let clientY = event.clientY;
-            if (event.touches && event.touches.length > 0) {
-                clientX = event.touches[0].clientX;
-                clientY = event.touches[0].clientY;
-            }
-
-            if (Math.random() < 0.05) {
-                this.triggerCatastrophe();
-            } else {
-                this.executeNormalFart(clientX, clientY);
-            }
-        }
-
-        executeNormalFart(x, y) {
-            this.audio.playRandomFart();
-            this.ui.triggerShake();
-            this.ui.updateSubtitle(this.messages[Math.floor(Math.random() * this.messages.length)]);
-            this.ui.changeRandomBackgroundColor();
-            this.particles.spawnGas(x, y);
-        }
-
-        triggerCatastrophe() {
-            this.isCatastropheMode = true;
-            this.clenchClicks = 0;
-            this.ui.updateProgressBar(0);
-            this.ui.toggleCatastropheUI(true);
-
-            this.catastropheIntervals.push(setInterval(() => this.audio.playRandomFart(), 400));
-            this.catastropheIntervals.push(setInterval(() => this.particles.spawnPoop(), 150));
-        }
-
-        handleMinigameClick() {
-            if (!this.isCatastropheMode) return;
-            
-            this.clenchClicks++;
-            const percentage = (this.clenchClicks / this.requiredClicks) * 100;
-            this.ui.updateProgressBar(percentage);
-            this.audio.playEffortSound();
-
-            if (this.clenchClicks >= this.requiredClicks) {
-                this.resolveCatastrophe();
-            }
-        }
-
-        resolveCatastrophe() {
-            this.catastropheIntervals.forEach(clearInterval);
-            this.catastropheIntervals = [];
-            this.isCatastropheMode = false;
-            this.ui.toggleCatastropheUI(false);
-        }
-    }
-
-    const fartSoundsDB = [
-        'https://www.soundjay.com/human/fart-01.mp3',
-        'https://www.soundjay.com/human/fart-02.mp3',
-        'https://www.soundjay.com/human/fart-03.mp3',
-        'https://www.soundjay.com/human/fart-06.mp3',
-        'https://www.soundjay.com/human/fart-08.mp3'
-    ];
-
-    const audioService = new AudioService(fartSoundsDB);
-    const uiManager = new UIManager();
-    const particleSystem = new ParticleSystem();
-    const game = new GameEngine(audioService, uiManager, particleSystem);
-</script>
+        h1 { color: var(--text-main); font-size: clamp(2rem, 8vw, 3rem); text-shadow: 2px 2px #fff; margin-bottom: 10px; z-index: 10; padding: 0 10px; }
+        #subtitle { color: #333; font-size: clamp(1rem, 5vw, 1.5rem); margin-bottom: 30px; font-weight: bold; z-index: 10;
