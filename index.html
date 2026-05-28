@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
+    <!-- LIGNE 7 : CHANGER LE PRÉNOM ICI -->
     <title>🎉 Joyeux Anniversaire [PRÉNOM] ! 🎉</title>
     
     <style>
@@ -86,6 +87,7 @@
 
     <div class="siren-text" id="siren-alert">🚨 ALERTE SURPRISE 🚨</div>
 
+    <!-- LIGNE 80 : CHANGER LE PRÉNOM ICI -->
     <h1>🎉 Joyeux Anniversaire [PRÉNOM] ! 🎉</h1>
     
     <div id="subtitle">Appuie pour faire la fête !</div>
@@ -115,12 +117,21 @@
                 this.players = this.urls.map(url => new Audio(url));
                 this.effortPlayer = new Audio('effort.mp3');
                 
+                // NOUVEAU : Musique de fond et Son de victoire
+                this.bgMusic = new Audio('musique.mp3');
+                this.bgMusic.loop = true; // Tourne en boucle
+                this.bgMusic.volume = 0.4; // Volume réduit pour ne pas couvrir les bruitages
+                
+                this.victorySound = new Audio('victoire.mp3');
+                this.victorySound.volume = 1;
+
                 this.isUnlocked = false;
             }
 
             unlock() {
                 if (this.isUnlocked) return;
                 
+                // Déblocage de tous les sons
                 this.players.forEach(p => {
                     p.volume = 0;
                     p.play().then(() => { p.pause(); p.currentTime = 0; p.volume = 1; }).catch(()=>{});
@@ -132,7 +143,17 @@
                     this.effortPlayer.currentTime = 0; 
                     this.effortPlayer.volume = 1; 
                 }).catch(()=>{});
+
+                this.victorySound.volume = 0;
+                this.victorySound.play().then(() => { 
+                    this.victorySound.pause(); 
+                    this.victorySound.currentTime = 0; 
+                    this.victorySound.volume = 1; 
+                }).catch(()=>{});
                 
+                // Lancement de la musique de fond permanente
+                this.bgMusic.play().catch(e => console.log("Musique bloquée :", e));
+
                 this.isUnlocked = true;
             }
 
@@ -146,6 +167,11 @@
                 this.effortPlayer.currentTime = 0; 
                 this.effortPlayer.playbackRate = 1.5;
                 this.effortPlayer.play().catch(e => console.log("Son effort bloqué :", e));
+            }
+
+            playVictorySound() {
+                this.victorySound.currentTime = 0;
+                this.victorySound.play().catch(e => console.log("Son victoire bloqué :", e));
             }
         }
 
@@ -328,6 +354,9 @@
                 this.catastropheIntervals = [];
                 this.isCatastropheMode = false;
                 this.ui.toggleCatastropheUI(false);
+
+                // NOUVEAU : Déclenchement du son de victoire !
+                this.audio.playVictorySound();
 
                 // La pluie de Ramens ou d'Avocats !
                 const rewards = [
