@@ -3,14 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>💨 Prout 3000 💨</title>
+    
+    <title>🎉 Joyeux Anniversaire ✨LUCIE✨ ! 🎉</title>
+    
     <style>
         :root {
-            --primary-bg: #a8ff78;
-            --secondary-bg: #78ffd6;
-            --btn-color: #8b4513;
-            --btn-border: #5c4033;
-            --text-main: #5c4033;
+            /* Couleurs festives (Rose, Or, Rouge) */
+            --primary-bg: #ff9a9e;
+            --secondary-bg: #fecfef;
+            --btn-color: #ff0844;
+            --btn-border: #ffb199;
+            --text-main: #d63031;
         }
 
         body {
@@ -20,42 +23,35 @@
             font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif;
             overflow: hidden; text-align: center; transition: background 0.3s;
             
-            /* ANTI-SÉLECTION ET ANTI-ZOOM MOBILE */
             -webkit-user-select: none;
             user-select: none;
             touch-action: manipulation;
             -webkit-tap-highlight-color: transparent;
         }
 
-        body.catastrophe { animation: alerteRouge 0.3s infinite !important; }
+        body.catastrophe { animation: partyMode 0.3s infinite !important; }
         .violent-shake { animation: violentShake 0.1s infinite; }
         .shake { animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both; }
 
         h1 { color: var(--text-main); font-size: clamp(2rem, 8vw, 3rem); text-shadow: 2px 2px #fff; margin-bottom: 10px; z-index: 10; padding: 0 10px; }
         #subtitle { color: #333; font-size: clamp(1rem, 5vw, 1.5rem); margin-bottom: 30px; font-weight: bold; z-index: 10; padding: 0 10px; }
-        .score-container { color: var(--text-main); margin-top: 40px; z-index: 10; background: rgba(255,255,255,0.5); padding: 10px; border-radius: 10px; }
+        .score-container { color: var(--text-main); margin-top: 40px; z-index: 10; background: rgba(255,255,255,0.6); padding: 10px 20px; border-radius: 20px; border: 2px dashed var(--btn-color); }
 
-        /* Bouton principal optimisé pour tous les écrans */
-        #prout-btn {
+        #party-btn {
             background-color: var(--btn-color); color: white; border: 5px solid var(--btn-border);
-            border-radius: 50%; 
-            width: 60vw; height: 60vw; /* Taille relative à l'écran */
-            max-width: 250px; max-height: 250px; /* Limite sur PC */
+            border-radius: 50%; width: 60vw; height: 60vw; max-width: 250px; max-height: 250px;
             font-size: clamp(1.2rem, 6vw, 2rem); font-weight: bold;
-            cursor: pointer; box-shadow: 0 15px var(--btn-border), 0 20px 20px rgba(0,0,0,0.5);
+            cursor: pointer; box-shadow: 0 15px var(--btn-border), 0 20px 20px rgba(0,0,0,0.3);
             transition: transform 0.1s, box-shadow 0.1s; z-index: 10;
-            
-            /* Retrait de l'effet bleu sur Android */
-            -webkit-tap-highlight-color: transparent;
-            outline: none;
+            -webkit-tap-highlight-color: transparent; outline: none;
         }
-        #prout-btn:active { transform: translateY(10px) scale(0.95); box-shadow: 0 5px var(--btn-border), 0 5px 10px rgba(0,0,0,0.5); background-color: #a0522d; }
+        #party-btn:active { transform: translateY(10px) scale(0.95); box-shadow: 0 5px var(--btn-border), 0 5px 10px rgba(0,0,0,0.3); background-color: #c0392b; }
 
-        .gas { position: absolute; font-size: 4rem; pointer-events: none; animation: floatUp 2s ease-out forwards; z-index: 5; }
-        .poop-rain { position: absolute; font-size: 5rem; pointer-events: none; animation: fallDown 1.5s linear forwards; z-index: 9999; }
+        .confetti { position: absolute; font-size: 3rem; pointer-events: none; animation: floatUp 2s ease-out forwards; z-index: 5; }
+        .gift-rain { position: absolute; font-size: 5rem; pointer-events: none; animation: fallDown 1.5s linear forwards; z-index: 9999; }
 
         .siren-text {
-            position: fixed; font-size: 8vw; color: #ffff00; text-shadow: 3px 3px #000, -3px -3px #ff0000;
+            position: fixed; font-size: 8vw; color: #fff; text-shadow: 3px 3px #000, -3px -3px #ff0844;
             font-weight: 900; z-index: 10000; pointer-events: none; display: none; top: 10%; left: 50%;
             transform: translateX(-50%); white-space: nowrap;
         }
@@ -63,24 +59,23 @@
 
         #minigame-container {
             display: none; flex-direction: column; align-items: center; justify-content: center;
-            background: rgba(0, 0, 0, 0.9); border: 4px dashed #ffeb3b; border-radius: 20px;
+            background: rgba(255, 255, 255, 0.95); border: 6px dashed #ff0844; border-radius: 20px;
             padding: 20px; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            z-index: 15000; width: 85%; max-width: 400px;
+            z-index: 15000; width: 85%; max-width: 400px; box-shadow: 0 0 30px rgba(0,0,0,0.5);
         }
-        #minigame-container h2 { color: #ffeb3b; margin-top: 0; font-size: 1.5rem; text-transform: uppercase; }
-        #minigame-container p { color: white; font-size: 1rem; margin: 10px 0; }
+        #minigame-container h2 { color: #ff0844; margin-top: 0; font-size: 1.8rem; text-transform: uppercase; }
+        #minigame-container p { color: #333; font-size: 1.1rem; margin: 10px 0; font-weight: bold; }
         
         #minigame-btn {
-            background-color: #ff5722; color: white; border: 4px solid #fff; border-radius: 15px;
+            background-color: #f1c40f; color: #d35400; border: 4px solid #f39c12; border-radius: 15px;
             padding: 15px 20px; font-size: 1.5rem; font-weight: bold; cursor: pointer; margin: 20px 0;
-            box-shadow: 0 10px #bf360c; transition: transform 0.05s, box-shadow 0.05s;
-            width: 100%; -webkit-tap-highlight-color: transparent;
+            box-shadow: 0 10px #e67e22; transition: transform 0.05s, box-shadow 0.05s; width: 100%; -webkit-tap-highlight-color: transparent;
         }
-        #minigame-btn:active { transform: translateY(10px); box-shadow: 0 0px #bf360c; }
-        #progress-bar-container { width: 100%; height: 30px; background-color: #333; border-radius: 15px; overflow: hidden; border: 3px solid #fff; }
-        #progress-bar { width: 0%; height: 100%; background-color: #4caf50; transition: width 0.1s; }
+        #minigame-btn:active { transform: translateY(10px); box-shadow: 0 0px #e67e22; }
+        #progress-bar-container { width: 100%; height: 30px; background-color: #eee; border-radius: 15px; overflow: hidden; border: 3px solid #ccc; }
+        #progress-bar { width: 0%; height: 100%; background-color: #ff0844; transition: width 0.1s; }
 
-        @keyframes alerteRouge { 0%, 100% { background: radial-gradient(circle, #ff0000 0%, #8b0000 100%); } 50% { background: radial-gradient(circle, #ff5555 0%, #3a0000 100%); } }
+        @keyframes partyMode { 0%, 100% { background: radial-gradient(circle, #f1c40f 0%, #e67e22 100%); } 50% { background: radial-gradient(circle, #9b59b6 0%, #8e44ad 100%); } }
         @keyframes shake { 10%, 90% { transform: translate3d(-3px, 0, 0); } 20%, 80% { transform: translate3d(3px, 0, 0); } 30%, 50%, 70% { transform: translate3d(-6px, 6px, 0) rotate(-2deg); } 40%, 60% { transform: translate3d(6px, -6px, 0) rotate(2deg); } }
         @keyframes violentShake { 0% { transform: translate(3px, 3px) rotate(0deg); } 25% { transform: translate(-3px, -3px) rotate(2deg); } 50% { transform: translate(-3px, 3px) rotate(-2deg); } 75% { transform: translate(3px, -3px) rotate(2deg); } 100% { transform: translate(3px, 3px) rotate(0deg); } }
         @keyframes floatUp { 0% { transform: translateY(0) scale(0.5) rotate(0deg); opacity: 1; } 100% { transform: translateY(-300px) scale(2) rotate(180deg); opacity: 0; } }
@@ -90,19 +85,20 @@
 </head>
 <body>
 
-    <div class="siren-text" id="siren-alert">🚨 ALERTE FUITE 🚨</div>
+    <div class="siren-text" id="siren-alert">🚨 ALERTE SURPRISE 🚨</div>
 
-    <h1>💨 Prout 3000 💨</h1>
-    <div id="subtitle">Appuie si t'es un vrai.</div>
+    <h1>🎉 Joyeux Anniversaire [PRÉNOM] ! 🎉</h1>
+    
+    <div id="subtitle">Appuie pour faire la fête !</div>
 
-    <button id="prout-btn">LÂCHE LA CAISSE</button>
+    <button id="party-btn">FAIS PÉTER<br>LA FÊTE</button>
 
-    <h2 class="score-container">Score : <span id="score">0</span></h2>
+    <h2 class="score-container">Niveau de Fête : <span id="score">0</span></h2>
 
     <div id="minigame-container">
-        <h2>RÉPARE LA FUITE !</h2>
-        <p>Clique vite pour fermer les vannes !</p>
-        <button id="minigame-btn">🪠 SERRER 🪠</button>
+        <h2>AVALANCHE DE CADEAUX !</h2>
+        <p>Clique super vite pour tout ouvrir !</p>
+        <button id="minigame-btn">🎁 TOUT DÉBALLER 🎁</button>
         <div id="progress-bar-container">
             <div id="progress-bar"></div>
         </div>
@@ -110,201 +106,39 @@
 
     <script>
         class AudioService {
-            constructor(sounds) {
-                this.sounds = sounds;
+            constructor() {
+                // Sons festifs (applaudissements, clochettes magiques, etc.)
+                this.sounds = [
+                    'https://www.soundjay.com/misc/sounds/magic-chime-01.mp3',
+                    'https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3',
+                    'https://www.soundjay.com/human/applause-01.mp3'
+                ];
                 this.mainPlayer = new Audio();
-                this.effortPlayer = new Audio('https://www.soundjay.com/human/fart-08.mp3');
+                this.effortPlayer = new Audio('https://www.soundjay.com/misc/sounds/magic-chime-02.mp3');
             }
 
-            playRandomFart() {
+            playPartySound() {
                 const url = this.sounds[Math.floor(Math.random() * this.sounds.length)];
                 this.mainPlayer.src = url;
                 this.mainPlayer.play().catch(e => console.log("Son bloqué :", e));
             }
 
-            playEffortSound() {
+            playMinigameSound() {
                 this.effortPlayer.currentTime = 0; 
-                this.effortPlayer.playbackRate = 2.0;
+                this.effortPlayer.playbackRate = 1.5;
                 this.effortPlayer.play().catch(e => console.log("Son effort bloqué :", e));
             }
         }
 
         class ParticleSystem {
-            spawnGas(x, y) {
-                const numGas = Math.floor(Math.random() * 3) + 2; 
-                for (let i = 0; i < numGas; i++) {
-                    const gas = document.createElement('div');
-                    gas.className = 'gas';
-                    gas.innerText = '💨'; 
+            spawnConfetti(x, y) {
+                const emojis = ['🎉', '✨', '🎈', '🎊', '⭐'];
+                const numConfetti = Math.floor(Math.random() * 4) + 3; 
+                for (let i = 0; i < numConfetti; i++) {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.innerText = emojis[Math.floor(Math.random() * emojis.length)]; 
                     const offsetX = (Math.random() - 0.5) * 150;
                     
                     if (x && y) {
-                        gas.style.left = `${x + offsetX - 30}px`;
-                        gas.style.top = `${y - 30}px`;
-                    } else {
-                        gas.style.left = `calc(50% + ${offsetX}px)`;
-                        gas.style.top = '50%';
-                    }
-                    
-                    document.body.appendChild(gas);
-                    setTimeout(() => gas.remove(), 2000);
-                }
-            }
-
-            spawnPoop() {
-                const poop = document.createElement('div');
-                poop.className = 'poop-rain';
-                poop.innerText = '💩';
-                poop.style.left = `${Math.random() * 100}vw`;
-                poop.style.transform = `scale(${Math.random() * 1.5 + 0.5})`;
-
-                document.body.appendChild(poop);
-                setTimeout(() => poop.remove(), 1500);
-            }
-        }
-
-        class UIManager {
-            constructor() {
-                this.btn = document.getElementById('prout-btn');
-                this.scoreElement = document.getElementById('score');
-                this.subtitle = document.getElementById('subtitle');
-                this.sirenAlert = document.getElementById('siren-alert');
-                this.minigameContainer = document.getElementById('minigame-container');
-                this.minigameBtn = document.getElementById('minigame-btn');
-                this.progressBar = document.getElementById('progress-bar');
-            }
-
-            updateScore(score) { this.scoreElement.innerText = score; }
-            updateSubtitle(text) { this.subtitle.innerText = text; }
-
-            triggerShake() {
-                document.body.classList.remove('shake');
-                void document.body.offsetWidth;
-                document.body.classList.add('shake');
-            }
-
-            changeRandomBackgroundColor() {
-                const hue = Math.floor(Math.random() * 60) + 60;
-                document.body.style.background = `radial-gradient(circle, hsl(${hue}, 100%, 70%) 0%, hsl(${hue - 30}, 100%, 40%) 100%)`;
-            }
-
-            resetBackgroundColor() { document.body.style.background = 'radial-gradient(circle, #a8ff78 0%, #78ffd6 100%)'; }
-
-            toggleCatastropheUI(isActive) {
-                if (isActive) {
-                    this.btn.style.display = 'none';
-                    this.minigameContainer.style.display = 'flex';
-                    document.body.classList.add('catastrophe', 'violent-shake');
-                    this.sirenAlert.classList.add('siren-active');
-                    this.updateSubtitle("ERREUR : LE SLIP A CÉDÉ !!!");
-                } else {
-                    this.minigameContainer.style.display = 'none';
-                    this.btn.style.display = 'block';
-                    document.body.classList.remove('catastrophe', 'violent-shake');
-                    this.sirenAlert.classList.remove('siren-active');
-                    this.updateSubtitle("Ouf... Va te laver quand même.");
-                    this.resetBackgroundColor();
-                }
-            }
-
-            updateProgressBar(percentage) { this.progressBar.style.width = `${percentage}%`; }
-        }
-
-        class GameEngine {
-            constructor(audioService, uiManager, particleSystem) {
-                this.audio = audioService;
-                this.ui = uiManager;
-                this.particles = particleSystem;
-                
-                this.score = 0;
-                this.isCatastropheMode = false;
-                this.clenchClicks = 0;
-                this.requiredClicks = 15;
-                this.catastropheIntervals = [];
-
-                this.messages = [
-                    "Oups, pardon !", "Celle-là était grasse.", "Alerte pollution ☢️",
-                    "Des fayots à midi ?", "Silence radio, dégâts max.", "Le slip a pris un coup."
-                ];
-
-                this._bindEvents();
-            }
-
-            _bindEvents() {
-                this.ui.btn.addEventListener('click', (e) => {
-                    this.handleMainClick(e);
-                });
-
-                this.ui.minigameBtn.addEventListener('click', (e) => {
-                    this.handleMinigameClick();
-                });
-            }
-
-            handleMainClick(event) {
-                if (this.isCatastropheMode) return;
-
-                this.score++;
-                this.ui.updateScore(this.score);
-
-                // La probabilité est bien passée à 8% (0.08)
-                if (Math.random() < 0.08) {
-                    this.triggerCatastrophe();
-                } else {
-                    this.executeNormalFart(event.clientX, event.clientY);
-                }
-            }
-
-            executeNormalFart(x, y) {
-                this.audio.playRandomFart();
-                this.ui.triggerShake();
-                this.ui.updateSubtitle(this.messages[Math.floor(Math.random() * this.messages.length)]);
-                this.ui.changeRandomBackgroundColor();
-                this.particles.spawnGas(x, y);
-            }
-
-            triggerCatastrophe() {
-                this.isCatastropheMode = true;
-                this.clenchClicks = 0;
-                this.ui.updateProgressBar(0);
-                this.ui.toggleCatastropheUI(true);
-
-                this.catastropheIntervals.push(setInterval(() => this.audio.playRandomFart(), 400));
-                this.catastropheIntervals.push(setInterval(() => this.particles.spawnPoop(), 150));
-            }
-
-            handleMinigameClick() {
-                if (!this.isCatastropheMode) return;
-                
-                this.clenchClicks++;
-                const percentage = (this.clenchClicks / this.requiredClicks) * 100;
-                this.ui.updateProgressBar(percentage);
-                this.audio.playEffortSound();
-
-                if (this.clenchClicks >= this.requiredClicks) {
-                    this.resolveCatastrophe();
-                }
-            }
-
-            resolveCatastrophe() {
-                this.catastropheIntervals.forEach(clearInterval);
-                this.catastropheIntervals = [];
-                this.isCatastropheMode = false;
-                this.ui.toggleCatastropheUI(false);
-            }
-        }
-
-        const fartSoundsDB = [
-            'https://www.soundjay.com/human/fart-01.mp3',
-            'https://www.soundjay.com/human/fart-02.mp3',
-            'https://www.soundjay.com/human/fart-03.mp3',
-            'https://www.soundjay.com/human/fart-06.mp3',
-            'https://www.soundjay.com/human/fart-08.mp3'
-        ];
-
-        const audioService = new AudioService(fartSoundsDB);
-        const uiManager = new UIManager();
-        const particleSystem = new ParticleSystem();
-        const game = new GameEngine(audioService, uiManager, particleSystem);
-    </script>
-</body>
-</html>
+                        confetti.style.left = `${x + offsetX
