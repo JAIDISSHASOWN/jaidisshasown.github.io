@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
-    <!-- LIGNE 7 : CHANGER LE PRÉNOM ICI -->
     <title>🎉 Joyeux Anniversaire [PRÉNOM] ! 🎉</title>
     
     <style>
@@ -57,6 +56,14 @@
         }
         .siren-active { display: block; animation: panicText 0.2s infinite; }
 
+        /* NOUVEAU : Le style du message de victoire géant */
+        .reward-message {
+            position: fixed; top: 40%; left: 50%; transform: translate(-50%, -50%);
+            font-size: clamp(2rem, 10vw, 4rem); color: #fff; text-shadow: 4px 4px #000, 0 0 20px #ff0844;
+            font-weight: 900; z-index: 20000; pointer-events: none; white-space: nowrap;
+            animation: popInAndOut 3s forwards;
+        }
+
         #minigame-container {
             display: none; flex-direction: column; align-items: center; justify-content: center;
             background: rgba(255, 255, 255, 0.95); border: 6px dashed #ff0844; border-radius: 20px;
@@ -81,13 +88,20 @@
         @keyframes floatUp { 0% { transform: translateY(0) scale(0.5) rotate(0deg); opacity: 1; } 100% { transform: translateY(-300px) scale(2) rotate(180deg); opacity: 0; } }
         @keyframes fallDown { 0% { transform: translateY(-10vh) scale(1) rotate(0deg); opacity: 1; } 100% { transform: translateY(110vh) scale(2) rotate(360deg); opacity: 0; } }
         @keyframes panicText { 0% { transform: translateX(-52%) scale(1); } 50% { transform: translateX(-48%) scale(1.1); } 100% { transform: translateX(-50%) scale(1); } }
+        /* NOUVEAU : L'animation du message géant */
+        @keyframes popInAndOut {
+            0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+            15% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+            30% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+            80% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(1.5); opacity: 0; }
+        }
     </style>
 </head>
 <body>
 
     <div class="siren-text" id="siren-alert">🚨 ALERTE SURPRISE 🚨</div>
 
-    <!-- LIGNE 80 : CHANGER LE PRÉNOM ICI -->
     <h1>🎉 Joyeux Anniversaire [PRÉNOM] ! 🎉</h1>
     
     <div id="subtitle">Appuie pour faire la fête !</div>
@@ -108,7 +122,6 @@
     <script>
         class AudioService {
             constructor() {
-                // Fichiers locaux stockés sur ton GitHub
                 this.urls = [
                     'son1.mp3',
                     'son2.mp3'
@@ -117,10 +130,9 @@
                 this.players = this.urls.map(url => new Audio(url));
                 this.effortPlayer = new Audio('effort.mp3');
                 
-                // NOUVEAU : Musique de fond et Son de victoire
                 this.bgMusic = new Audio('musique.mp3');
-                this.bgMusic.loop = true; // Tourne en boucle
-                this.bgMusic.volume = 0.4; // Volume réduit pour ne pas couvrir les bruitages
+                this.bgMusic.loop = true; 
+                this.bgMusic.volume = 0.4; 
                 
                 this.victorySound = new Audio('victoire.mp3');
                 this.victorySound.volume = 1;
@@ -131,7 +143,6 @@
             unlock() {
                 if (this.isUnlocked) return;
                 
-                // Déblocage de tous les sons
                 this.players.forEach(p => {
                     p.volume = 0;
                     p.play().then(() => { p.pause(); p.currentTime = 0; p.volume = 1; }).catch(()=>{});
@@ -151,7 +162,6 @@
                     this.victorySound.volume = 1; 
                 }).catch(()=>{});
                 
-                // Lancement de la musique de fond permanente
                 this.bgMusic.play().catch(e => console.log("Musique bloquée :", e));
 
                 this.isUnlocked = true;
@@ -216,6 +226,15 @@
 
                 document.body.appendChild(item);
                 setTimeout(() => item.remove(), 1500);
+            }
+
+            // NOUVEAU : Affichage du message géant au centre de l'écran
+            showRewardMessage(text) {
+                const msg = document.createElement('div');
+                msg.className = 'reward-message';
+                msg.innerText = text;
+                document.body.appendChild(msg);
+                setTimeout(() => msg.remove(), 3000);
             }
         }
 
@@ -290,13 +309,12 @@
             }
 
             _bindEvents() {
-                // Déblocage de l'audio au premier clic n'importe où
                 document.body.addEventListener('click', () => {
                     this.audio.unlock();
                 }, { once: true });
 
                 this.ui.btn.addEventListener('click', (e) => {
-                    this.audio.unlock(); // Sécurité
+                    this.audio.unlock();
                     this.handleMainClick(e);
                 });
 
@@ -355,17 +373,18 @@
                 this.isCatastropheMode = false;
                 this.ui.toggleCatastropheUI(false);
 
-                // NOUVEAU : Déclenchement du son de victoire !
                 this.audio.playVictorySound();
 
-                // La pluie de Ramens ou d'Avocats !
                 const rewards = [
-                    { text: "Cadeau déballé : Pluie d'Avocats ! 🥑", emoji: '🥑' },
-                    { text: "Cadeau déballé : Pluie de Ramens ! 🍜", emoji: '🍜' }
+                    { title: "🎁 PLUIE D'AVOCATS ! 🥑", emoji: '🥑' },
+                    { title: "🎁 PLUIE DE RAMENS ! 🍜", emoji: '🍜' }
                 ];
                 const selectedReward = rewards[Math.floor(Math.random() * rewards.length)];
                 
-                this.ui.updateSubtitle(selectedReward.text);
+                this.ui.updateSubtitle("Cadeau ouvert !");
+                
+                // NOUVEAU : Appel de la fonction pour le texte géant
+                this.particles.showRewardMessage(selectedReward.title);
 
                 let rewardInterval = setInterval(() => this.particles.spawnReward(selectedReward.emoji), 100);
                 setTimeout(() => clearInterval(rewardInterval), 3000);
