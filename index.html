@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
-    <title>🎉 Joyeux Anniversaire [PRÉNOM] ! 🎉</title>
+    <title>🎉 Joyeux Anniversaire ✨LUCIE✨ ! 🎉</title>
     
     <style>
         :root {
@@ -56,10 +56,12 @@
         }
         .siren-active { display: block; animation: panicText 0.2s infinite; }
 
-        /* NOUVEAU : Le style du message de victoire géant */
+        /* NOUVEAU : Le style du message de victoire géant (TAILLE RÉDUITE) */
         .reward-message {
             position: fixed; top: 40%; left: 50%; transform: translate(-50%, -50%);
-            font-size: clamp(2rem, 10vw, 4rem); color: #fff; text-shadow: 4px 4px #000, 0 0 20px #ff0844;
+            /* C'est cette ligne qui change : la taille est plus petite */
+            font-size: clamp(1.2rem, 6vw, 2.5rem); 
+            color: #fff; text-shadow: 3px 3px #000, 0 0 15px #ff0844;
             font-weight: 900; z-index: 20000; pointer-events: none; white-space: nowrap;
             animation: popInAndOut 3s forwards;
         }
@@ -88,13 +90,13 @@
         @keyframes floatUp { 0% { transform: translateY(0) scale(0.5) rotate(0deg); opacity: 1; } 100% { transform: translateY(-300px) scale(2) rotate(180deg); opacity: 0; } }
         @keyframes fallDown { 0% { transform: translateY(-10vh) scale(1) rotate(0deg); opacity: 1; } 100% { transform: translateY(110vh) scale(2) rotate(360deg); opacity: 0; } }
         @keyframes panicText { 0% { transform: translateX(-52%) scale(1); } 50% { transform: translateX(-48%) scale(1.1); } 100% { transform: translateX(-50%) scale(1); } }
-        /* NOUVEAU : L'animation du message géant */
+        /* L'animation du message (EFFET DE ZOOM RÉDUIT) */
         @keyframes popInAndOut {
             0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
-            15% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+            15% { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
             30% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
             80% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
-            100% { transform: translate(-50%, -50%) scale(1.5); opacity: 0; }
+            100% { transform: translate(-50%, -50%) scale(1.2); opacity: 0; }
         }
     </style>
 </head>
@@ -102,7 +104,7 @@
 
     <div class="siren-text" id="siren-alert">🚨 ALERTE SURPRISE 🚨</div>
 
-    <h1>🎉 Joyeux Anniversaire [PRÉNOM] ! 🎉</h1>
+    <h1>🎉 Joyeux Anniversaire ✨LUCIE✨ ! 🎉</h1>
     
     <div id="subtitle">Appuie pour faire la fête !</div>
 
@@ -132,7 +134,7 @@
                 
                 this.bgMusic = new Audio('musique.mp3');
                 this.bgMusic.loop = true; 
-                this.bgMusic.volume = 0.4; 
+                this.bgMusic.volume = 0.6; 
                 
                 this.victorySound = new Audio('victoire.mp3');
                 this.victorySound.volume = 1;
@@ -297,12 +299,16 @@
                 this.catastropheIntervals = [];
 
                 this.messages = [
-                    "Un an de plus, un an de mieux !", 
-                    "On fait péter le champagne 🥂", 
-                    "C'est qui le boss aujourd'hui ?",
+                    "Un an de plus, une nouvelle année de bonheur", 
+                    "On fait péter la bière", 
+                    "C'est qui la boss aujourd'hui (tous les jours) ?",
                     "Profite à fond !", 
                     "Cadeau en approche...", 
-                    "Allez, on souffle les bougies !"
+                    "Allez, on souffle les bougies !"a
+                    "Certifié 100% GOATS !"
+                    "Pour la reine de l'escalade !"
+                    "Tous les pandas applaudissent !"
+                    "Même pas en RETARD pour ton anniv !"
                 ];
 
                 this._bindEvents();
@@ -378,6 +384,7 @@
                 const rewards = [
                     { title: "🎁 PLUIE D'AVOCATS ! 🥑", emoji: '🥑' },
                     { title: "🎁 PLUIE DE RAMENS ! 🍜", emoji: '🍜' }
+                    { title: "🎁 BON DE RETARD ! 🎟️", emoji: '🎟️' },
                 ];
                 const selectedReward = rewards[Math.floor(Math.random() * rewards.length)];
                 
