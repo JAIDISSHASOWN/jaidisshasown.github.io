@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
-    <!-- LIGNE 7 : CHANGER LE PRÉNOM ICI -->
     <title>🎉 Joyeux Anniversaire [PRÉNOM] ! 🎉</title>
     
     <style>
@@ -87,7 +86,6 @@
 
     <div class="siren-text" id="siren-alert">🚨 ALERTE SURPRISE 🚨</div>
 
-    <!-- LIGNE 80 : CHANGER LE PRÉNOM ICI -->
     <h1>🎉 Joyeux Anniversaire [PRÉNOM] ! 🎉</h1>
     
     <div id="subtitle">Appuie pour faire la fête !</div>
@@ -106,9 +104,9 @@
     </div>
 
     <script>
-class AudioService {
+        class AudioService {
             constructor() {
-                // Fini les liens externes ! On utilise tes fichiers locaux hébergés sur GitHub.
+                // Fichiers locaux stockés sur ton GitHub
                 this.urls = [
                     'son1.mp3',
                     'son2.mp3'
@@ -123,7 +121,6 @@ class AudioService {
             unlock() {
                 if (this.isUnlocked) return;
                 
-                // Le déblocage natif pour Android
                 this.players.forEach(p => {
                     p.volume = 0;
                     p.play().then(() => { p.pause(); p.currentTime = 0; p.volume = 1; }).catch(()=>{});
@@ -267,13 +264,13 @@ class AudioService {
             }
 
             _bindEvents() {
-                // Le grand secret Android : débloquer l'audio au TOUT PREMIER toucher n'importe où
+                // Déblocage de l'audio au premier clic n'importe où
                 document.body.addEventListener('click', () => {
                     this.audio.unlock();
                 }, { once: true });
 
                 this.ui.btn.addEventListener('click', (e) => {
-                    this.audio.unlock(); // Double sécurité
+                    this.audio.unlock(); // Sécurité
                     this.handleMainClick(e);
                 });
 
@@ -332,6 +329,7 @@ class AudioService {
                 this.isCatastropheMode = false;
                 this.ui.toggleCatastropheUI(false);
 
+                // La pluie de Ramens ou d'Avocats !
                 const rewards = [
                     { text: "Cadeau déballé : Pluie d'Avocats ! 🥑", emoji: '🥑' },
                     { text: "Cadeau déballé : Pluie de Ramens ! 🍜", emoji: '🍜' }
