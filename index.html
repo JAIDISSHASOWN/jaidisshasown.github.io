@@ -106,29 +106,29 @@
     </div>
 
     <script>
-        class AudioService {
+class AudioService {
             constructor() {
-                // Liens Wikipedia (100% fiables et sans blocage)
+                // Fini les liens externes ! On utilise tes fichiers locaux hébergés sur GitHub.
                 this.urls = [
-                    'https://upload.wikimedia.org/wikipedia/commons/f/f6/Cheering_and_applause.ogg',
-                    'https://upload.wikimedia.org/wikipedia/commons/4/43/Ting.ogg',
-                    'https://upload.wikimedia.org/wikipedia/commons/6/6e/Party_horn.ogg'
+                    'son1.mp3',
+                    'son2.mp3'
                 ];
                 
-                // Création des lecteurs indépendants
                 this.players = this.urls.map(url => new Audio(url));
-                this.effortPlayer = new Audio('https://upload.wikimedia.org/wikipedia/commons/4/43/Ting.ogg');
+                this.effortPlayer = new Audio('effort.mp3');
                 
                 this.isUnlocked = false;
             }
 
             unlock() {
                 if (this.isUnlocked) return;
-                // Joue et met en pause tous les sons au premier toucher (débloque Android)
+                
+                // Le déblocage natif pour Android
                 this.players.forEach(p => {
                     p.volume = 0;
                     p.play().then(() => { p.pause(); p.currentTime = 0; p.volume = 1; }).catch(()=>{});
                 });
+                
                 this.effortPlayer.volume = 0;
                 this.effortPlayer.play().then(() => { 
                     this.effortPlayer.pause(); 
