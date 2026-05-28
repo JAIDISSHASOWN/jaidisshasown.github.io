@@ -298,17 +298,22 @@
                 this.requiredClicks = 15;
                 this.catastropheIntervals = [];
 
+                // LISTE CORRIGÉE ICI (ajout des virgules)
                 this.messages = [
                     "Un an de plus, une nouvelle année de bonheur", 
                     "On fait péter la bière", 
                     "C'est qui la boss aujourd'hui (tous les jours) ?",
                     "Profite à fond !", 
                     "Cadeau en approche...", 
-                    "Allez, on souffle les bougies !"a
-                    "Certifié 100% GOATS !"
-                    "Pour la reine de l'escalade !"
-                    "Tous les pandas applaudissent !"
-                    "Même pas en RETARD pour ton anniv !"
+                    "Allez, on souffle les bougies !",
+                    "Certifié 100% GOATS !",
+                    "Pour la reine de l'escalade !",
+                    "Tous les pandas applaudissent !",
+                    "Même pas en RETARD pour ton anniv !",
+                    "TOP 1% des journées de cette année !",
+                    "生日快乐 !",
+                    "Si seulement ça pouvais ne jamais s'arreter !"
+                    "200 de QI en 21 ans, ça fait beaucoup !"
                 ];
 
                 this._bindEvents();
@@ -381,16 +386,16 @@
 
                 this.audio.playVictorySound();
 
+                // LISTE CORRIGÉE ICI (ajout de la virgule)
                 const rewards = [
                     { title: "🎁 PLUIE D'AVOCATS ! 🥑", emoji: '🥑' },
-                    { title: "🎁 PLUIE DE RAMENS ! 🍜", emoji: '🍜' }
-                    { title: "🎁 BON DE RETARD ! 🎟️", emoji: '🎟️' },
+                    { title: "🎁 PLUIE DE RAMENS ! 🍜", emoji: '🍜' },
+                    { title: "🎁 BON DE RETARD ! 🎟️", emoji: '🎟️' }
                 ];
                 const selectedReward = rewards[Math.floor(Math.random() * rewards.length)];
                 
                 this.ui.updateSubtitle("Cadeau ouvert !");
                 
-                // NOUVEAU : Appel de la fonction pour le texte géant
                 this.particles.showRewardMessage(selectedReward.title);
 
                 let rewardInterval = setInterval(() => this.particles.spawnReward(selectedReward.emoji), 100);
