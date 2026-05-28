@@ -141,4 +141,169 @@
                     const offsetX = (Math.random() - 0.5) * 150;
                     
                     if (x && y) {
-                        confetti.style.left = `${x + offsetX
+                        confetti.style.left = `${x + offsetX - 30}px`;
+                        confetti.style.top = `${y - 30}px`;
+                    } else {
+                        confetti.style.left = `calc(50% + ${offsetX}px)`;
+                        confetti.style.top = '50%';
+                    }
+                    
+                    document.body.appendChild(confetti);
+                    setTimeout(() => confetti.remove(), 2000);
+                }
+            }
+
+            spawnGifts() {
+                const gifts = ['🎁', '🎂', '🍰', '🥂'];
+                const item = document.createElement('div');
+                item.className = 'gift-rain';
+                item.innerText = gifts[Math.floor(Math.random() * gifts.length)];
+                item.style.left = `${Math.random() * 100}vw`;
+                item.style.transform = `scale(${Math.random() * 1.5 + 0.5})`;
+
+                document.body.appendChild(item);
+                setTimeout(() => item.remove(), 1500);
+            }
+        }
+
+        class UIManager {
+            constructor() {
+                this.btn = document.getElementById('party-btn');
+                this.scoreElement = document.getElementById('score');
+                this.subtitle = document.getElementById('subtitle');
+                this.sirenAlert = document.getElementById('siren-alert');
+                this.minigameContainer = document.getElementById('minigame-container');
+                this.minigameBtn = document.getElementById('minigame-btn');
+                this.progressBar = document.getElementById('progress-bar');
+            }
+
+            updateScore(score) { this.scoreElement.innerText = score; }
+            updateSubtitle(text) { this.subtitle.innerText = text; }
+
+            triggerShake() {
+                document.body.classList.remove('shake');
+                void document.body.offsetWidth;
+                document.body.classList.add('shake');
+            }
+
+            changeRandomBackgroundColor() {
+                const hue = Math.floor(Math.random() * 360);
+                document.body.style.background = `radial-gradient(circle, hsl(${hue}, 100%, 80%) 0%, hsl(${hue + 40}, 100%, 60%) 100%)`;
+            }
+
+            resetBackgroundColor() { document.body.style.background = 'radial-gradient(circle, var(--primary-bg) 0%, var(--secondary-bg) 100%)'; }
+
+            toggleCatastropheUI(isActive) {
+                if (isActive) {
+                    this.btn.style.display = 'none';
+                    this.minigameContainer.style.display = 'flex';
+                    document.body.classList.add('catastrophe', 'violent-shake');
+                    this.sirenAlert.classList.add('siren-active');
+                    this.updateSubtitle("SURDOSE DE GÂTEAU !!!");
+                } else {
+                    this.minigameContainer.style.display = 'none';
+                    this.btn.style.display = 'block';
+                    document.body.classList.remove('catastrophe', 'violent-shake');
+                    this.sirenAlert.classList.remove('siren-active');
+                    this.updateSubtitle("Ouf... Tout est déballé !");
+                    this.resetBackgroundColor();
+                }
+            }
+
+            updateProgressBar(percentage) { this.progressBar.style.width = `${percentage}%`; }
+        }
+
+        class GameEngine {
+            constructor(audioService, uiManager, particleSystem) {
+                this.audio = audioService;
+                this.ui = uiManager;
+                this.particles = particleSystem;
+                
+                this.score = 0;
+                this.isCatastropheMode = false;
+                this.clenchClicks = 0;
+                this.requiredClicks = 15;
+                this.catastropheIntervals = [];
+
+                this.messages = [
+                    "Un an de plus, un an de mieux !", 
+                    "On fait péter le champagne 🥂", 
+                    "C'est qui le boss aujourd'hui ?",
+                    "Profite à fond !", 
+                    "Cadeau en approche...", 
+                    "Allez, on souffle les bougies !"
+                ];
+
+                this._bindEvents();
+            }
+
+            _bindEvents() {
+                this.ui.btn.addEventListener('click', (e) => {
+                    this.handleMainClick(e);
+                });
+
+                this.ui.minigameBtn.addEventListener('click', (e) => {
+                    this.handleMinigameClick();
+                });
+            }
+
+            handleMainClick(event) {
+                if (this.isCatastropheMode) return;
+
+                this.score++;
+                this.ui.updateScore(this.score);
+
+                // 8% de chance d'avalanche de cadeaux
+                if (Math.random() < 0.08) {
+                    this.triggerCatastrophe();
+                } else {
+                    this.executeNormalParty(event.clientX, event.clientY);
+                }
+            }
+
+            executeNormalParty(x, y) {
+                this.audio.playPartySound();
+                this.ui.triggerShake();
+                this.ui.updateSubtitle(this.messages[Math.floor(Math.random() * this.messages.length)]);
+                this.ui.changeRandomBackgroundColor();
+                this.particles.spawnConfetti(x, y);
+            }
+
+            triggerCatastrophe() {
+                this.isCatastropheMode = true;
+                this.clenchClicks = 0;
+                this.ui.updateProgressBar(0);
+                this.ui.toggleCatastropheUI(true);
+
+                this.catastropheIntervals.push(setInterval(() => this.audio.playPartySound(), 500));
+                this.catastropheIntervals.push(setInterval(() => this.particles.spawnGifts(), 150));
+            }
+
+            handleMinigameClick() {
+                if (!this.isCatastropheMode) return;
+                
+                this.clenchClicks++;
+                const percentage = (this.clenchClicks / this.requiredClicks) * 100;
+                this.ui.updateProgressBar(percentage);
+                this.audio.playMinigameSound();
+
+                if (this.clenchClicks >= this.requiredClicks) {
+                    this.resolveCatastrophe();
+                }
+            }
+
+            resolveCatastrophe() {
+                this.catastropheIntervals.forEach(clearInterval);
+                this.catastropheIntervals = [];
+                this.isCatastropheMode = false;
+                this.ui.toggleCatastropheUI(false);
+            }
+        }
+
+        const audioService = new AudioService();
+        const uiManager = new UIManager();
+        const particleSystem = new ParticleSystem();
+        const game = new GameEngine(audioService, uiManager, particleSystem);
+    </script>
+</body>
+</html>
