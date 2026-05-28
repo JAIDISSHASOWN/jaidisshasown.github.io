@@ -4,21 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
-    <title>🎉 Joyeux Anniversaire LUCIE ! 🎉</title>
+    <!-- LIGNE 7 : CHANGER LE PRÉNOM ICI -->
+    <title>🎉 Joyeux Anniversaire [PRÉNOM] ! 🎉</title>
     
     <style>
         :root {
-            var(--primary-bg): #ff9a9e;
-            var(--secondary-bg): #fecfef;
-            var(--btn-color): #ff0844;
-            var(--btn-border): #ffb199;
-            var(--text-main): #d63031;
+            --primary-bg: #ff9a9e;
+            --secondary-bg: #fecfef;
+            --btn-color: #ff0844;
+            --btn-border: #ffb199;
+            --text-main: #d63031;
         }
 
         body {
             margin: 0; padding: 0; height: 100vh;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            background: radial-gradient(circle, #ff9a9e 0%, #fecfef 100%);
+            background: radial-gradient(circle, var(--primary-bg) 0%, var(--secondary-bg) 100%);
             font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif;
             overflow: hidden; text-align: center; transition: background 0.3s;
             
@@ -32,19 +33,19 @@
         .violent-shake { animation: violentShake 0.1s infinite; }
         .shake { animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both; }
 
-        h1 { color: #d63031; font-size: clamp(2rem, 8vw, 3rem); text-shadow: 2px 2px #fff; margin-bottom: 10px; z-index: 10; padding: 0 10px; }
+        h1 { color: var(--text-main); font-size: clamp(2rem, 8vw, 3rem); text-shadow: 2px 2px #fff; margin-bottom: 10px; z-index: 10; padding: 0 10px; }
         #subtitle { color: #333; font-size: clamp(1rem, 5vw, 1.5rem); margin-bottom: 30px; font-weight: bold; z-index: 10; padding: 0 10px; }
-        .score-container { color: #d63031; margin-top: 40px; z-index: 10; background: rgba(255,255,255,0.6); padding: 10px 20px; border-radius: 20px; border: 2px dashed #ff0844; }
+        .score-container { color: var(--text-main); margin-top: 40px; z-index: 10; background: rgba(255,255,255,0.6); padding: 10px 20px; border-radius: 20px; border: 2px dashed var(--btn-color); }
 
         #party-btn {
-            background-color: #ff0844; color: white; border: 5px solid #ffb199;
+            background-color: var(--btn-color); color: white; border: 5px solid var(--btn-border);
             border-radius: 50%; width: 60vw; height: 60vw; max-width: 250px; max-height: 250px;
             font-size: clamp(1.2rem, 6vw, 2rem); font-weight: bold;
-            cursor: pointer; box-shadow: 0 15px #ffb199, 0 20px 20px rgba(0,0,0,0.3);
+            cursor: pointer; box-shadow: 0 15px var(--btn-border), 0 20px 20px rgba(0,0,0,0.3);
             transition: transform 0.1s, box-shadow 0.1s; z-index: 10;
             -webkit-tap-highlight-color: transparent; outline: none;
         }
-        #party-btn:active { transform: translateY(10px) scale(0.95); box-shadow: 0 5px #ffb199, 0 5px 10px rgba(0,0,0,0.3); background-color: #c0392b; }
+        #party-btn:active { transform: translateY(10px) scale(0.95); box-shadow: 0 5px var(--btn-border), 0 5px 10px rgba(0,0,0,0.3); background-color: #c0392b; }
 
         .confetti { position: absolute; font-size: 3rem; pointer-events: none; animation: floatUp 2s ease-out forwards; z-index: 5; }
         .gift-rain { position: absolute; font-size: 5rem; pointer-events: none; animation: fallDown 1.5s linear forwards; z-index: 9999; }
@@ -86,7 +87,8 @@
 
     <div class="siren-text" id="siren-alert">🚨 ALERTE SURPRISE 🚨</div>
 
-    <h1>🎉 Joyeux Anniversaire LUCIE ! 🎉</h1>
+    <!-- LIGNE 80 : CHANGER LE PRÉNOM ICI -->
+    <h1>🎉 Joyeux Anniversaire [PRÉNOM] ! 🎉</h1>
     
     <div id="subtitle">Appuie pour faire la fête !</div>
 
@@ -106,19 +108,41 @@
     <script>
         class AudioService {
             constructor() {
-                this.sounds = [
-                    'https://www.soundjay.com/misc/sounds/magic-chime-01.mp3',
-                    'https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3',
-                    'https://www.soundjay.com/human/applause-01.mp3'
+                // Liens Wikipedia (100% fiables et sans blocage)
+                this.urls = [
+                    'https://upload.wikimedia.org/wikipedia/commons/f/f6/Cheering_and_applause.ogg',
+                    'https://upload.wikimedia.org/wikipedia/commons/4/43/Ting.ogg',
+                    'https://upload.wikimedia.org/wikipedia/commons/6/6e/Party_horn.ogg'
                 ];
-                this.mainPlayer = new Audio();
-                this.effortPlayer = new Audio('https://www.soundjay.com/misc/sounds/magic-chime-02.mp3');
+                
+                // Création des lecteurs indépendants
+                this.players = this.urls.map(url => new Audio(url));
+                this.effortPlayer = new Audio('https://upload.wikimedia.org/wikipedia/commons/4/43/Ting.ogg');
+                
+                this.isUnlocked = false;
+            }
+
+            unlock() {
+                if (this.isUnlocked) return;
+                // Joue et met en pause tous les sons au premier toucher (débloque Android)
+                this.players.forEach(p => {
+                    p.volume = 0;
+                    p.play().then(() => { p.pause(); p.currentTime = 0; p.volume = 1; }).catch(()=>{});
+                });
+                this.effortPlayer.volume = 0;
+                this.effortPlayer.play().then(() => { 
+                    this.effortPlayer.pause(); 
+                    this.effortPlayer.currentTime = 0; 
+                    this.effortPlayer.volume = 1; 
+                }).catch(()=>{});
+                
+                this.isUnlocked = true;
             }
 
             playPartySound() {
-                const url = this.sounds[Math.floor(Math.random() * this.sounds.length)];
-                this.mainPlayer.src = url;
-                this.mainPlayer.play().catch(e => console.log("Son bloqué :", e));
+                const player = this.players[Math.floor(Math.random() * this.players.length)];
+                player.currentTime = 0;
+                player.play().catch(e => console.log("Son bloqué :", e));
             }
 
             playMinigameSound() {
@@ -197,7 +221,7 @@
                 document.body.style.background = `radial-gradient(circle, hsl(${hue}, 100%, 80%) 0%, hsl(${hue + 40}, 100%, 60%) 100%)`;
             }
 
-            resetBackgroundColor() { document.body.style.background = 'radial-gradient(circle, #ff9a9e 0%, #fecfef 100%)'; }
+            resetBackgroundColor() { document.body.style.background = 'radial-gradient(circle, var(--primary-bg) 0%, var(--secondary-bg) 100%)'; }
 
             toggleCatastropheUI(isActive) {
                 if (isActive) {
@@ -243,7 +267,13 @@
             }
 
             _bindEvents() {
+                // Le grand secret Android : débloquer l'audio au TOUT PREMIER toucher n'importe où
+                document.body.addEventListener('click', () => {
+                    this.audio.unlock();
+                }, { once: true });
+
                 this.ui.btn.addEventListener('click', (e) => {
+                    this.audio.unlock(); // Double sécurité
                     this.handleMainClick(e);
                 });
 
@@ -297,13 +327,11 @@
             }
 
             resolveCatastrophe() {
-                // Nettoyage de l'événement en cours
                 this.catastropheIntervals.forEach(clearInterval);
                 this.catastropheIntervals = [];
                 this.isCatastropheMode = false;
                 this.ui.toggleCatastropheUI(false);
 
-                // NOUVEAUTÉ : Le tirage au sort du cadeau loufoque
                 const rewards = [
                     { text: "Cadeau déballé : Pluie d'Avocats ! 🥑", emoji: '🥑' },
                     { text: "Cadeau déballé : Pluie de Ramens ! 🍜", emoji: '🍜' }
@@ -312,7 +340,6 @@
                 
                 this.ui.updateSubtitle(selectedReward.text);
 
-                // Fait pleuvoir le cadeau pendant 3 secondes
                 let rewardInterval = setInterval(() => this.particles.spawnReward(selectedReward.emoji), 100);
                 setTimeout(() => clearInterval(rewardInterval), 3000);
             }
